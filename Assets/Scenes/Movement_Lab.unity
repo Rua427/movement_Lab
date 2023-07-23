@@ -1045,8 +1045,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeb9ff899020cf4bba0c367151844ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensX: 200
-  sensY: 200
+  sensX: 1000
+  sensY: 1000
   orientation: {fileID: 88721924}
   camHolder: {fileID: 304890826}
 --- !u!1 &372925154 stripped
