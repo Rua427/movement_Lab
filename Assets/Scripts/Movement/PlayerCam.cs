@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class PlayerCam : MonoBehaviour
 {
     public float sensX;
@@ -32,5 +31,14 @@ public class PlayerCam : MonoBehaviour
         // rotate cam and orientation
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+    }
+
+    public void DoFov(float endValue)
+    {
+
+    }
+    public void DoTile(float zTilt)
+    {
+
     }
 }
