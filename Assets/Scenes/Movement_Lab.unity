@@ -1364,7 +1364,7 @@ PrefabInstance:
     - target: {fileID: 7993119983977949264, guid: 9eb847ab97b24024588682c8601254cf,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2254,7 +2254,7 @@ PrefabInstance:
     - target: {fileID: 7993119983977949264, guid: 9eb847ab97b24024588682c8601254cf,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2347,7 +2347,7 @@ PrefabInstance:
     - target: {fileID: 7993119983977949264, guid: 9eb847ab97b24024588682c8601254cf,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2440,7 +2440,7 @@ PrefabInstance:
     - target: {fileID: 7993119983977949264, guid: 9eb847ab97b24024588682c8601254cf,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2501,6 +2501,7 @@ GameObject:
   - component: {fileID: 2006380347}
   - component: {fileID: 2006380348}
   - component: {fileID: 2006380349}
+  - component: {fileID: 2006380350}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2542,6 +2543,8 @@ MonoBehaviour:
   sprintSpeed: 1.5
   slideSpeed: 30
   wallRunSpeed: 8.5
+  climbingSpeed: 3.5
+  airMinSpeed: 7
   speedIncreaseMultiplier: 1.5
   slopeIncreaseMultiplier: 2.5
   groundDrag: 4
@@ -2558,6 +2561,7 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
+  grounded: 0
   maxSlopeAngle: 50
   orientation: {fileID: 88721924}
   text_speed: {fileID: 64732507}
@@ -2566,6 +2570,7 @@ MonoBehaviour:
   sliding: 0
   crouching: 0
   wallRunning: 0
+  climbing: 0
 --- !u!54 &2006380347
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2625,7 +2630,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   whatIsWall:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 128
   wahtIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -2644,6 +2649,29 @@ MonoBehaviour:
   gravityCounterForce: 0
   orientation: {fileID: 88721924}
   cam: {fileID: 330585548}
+--- !u!114 &2006380350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2006380342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f5cccaa6b3634baf8e0dedcd9c57af1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orientation: {fileID: 88721924}
+  rb: {fileID: 2006380347}
+  pm: {fileID: 2006380346}
+  whatIsWall:
+    serializedVersion: 2
+    m_Bits: 128
+  climbSpeed: 10
+  maxClimbTime: 0.75
+  detectionLength: 0.7
+  sphereCastRadius: 0.25
+  maxWallLookAngle: 30
 --- !u!4 &2010635531 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8642225304373351647, guid: 50a0925b0c22af146a2d15615f815a1c,

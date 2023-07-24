@@ -13,6 +13,8 @@ public class PlayerMovement : MonoBehaviour
     public float sprintSpeed;
     public float slideSpeed;
     public float wallRunSpeed;
+    public float climbingSpeed;
+    public float airMinSpeed;
 
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
@@ -41,12 +43,15 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
-    bool grounded;
+    public bool grounded;
 
     [Header("Slope Handling")]
     public float maxSlopeAngle;
     private RaycastHit slopeHit;
     private bool exitingSlope;
+
+    [Header("References")]
+    public Climbing climbingScript;
 
     public Transform orientation;
 
@@ -67,6 +72,7 @@ public class PlayerMovement : MonoBehaviour
         walking,
         sprinting,
         wallrunning,
+        climbing,
         crouching,
         sliding,
         air
@@ -74,6 +80,7 @@ public class PlayerMovement : MonoBehaviour
     public bool sliding;
     public bool crouching;
     public bool wallRunning;
+    public bool climbing;
 
     private void Awake()
     {
@@ -139,14 +146,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void StateHandler()
     {
+
+        // Mode - Climbing
+        if (climbing)
+        {
+            state = MovementState.climbing;
+            desiredMoveSpeed = climbingSpeed;
+        }
         //mode - wall running
-        if (wallRunning)
+        else if (wallRunning)
         {
             state = MovementState.wallrunning;
             desiredMoveSpeed = wallRunSpeed;
         }
         //  mode  - sliding
-        if (sliding)
+        else if (sliding)
         {
             state = MovementState.sliding;
             if (OnSlope() && rb.velocity.y < .1f)
@@ -228,6 +242,8 @@ public class PlayerMovement : MonoBehaviour
     }
     private void MovePlayer()
     {
+        if (climbingScript.exitingWall) return;
+
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
