@@ -69,6 +69,9 @@ public class PlayerMovement : MonoBehaviour
     public MovementState state;
     public enum MovementState
     {
+        freeze,
+        unlimited,
+        vaulting,
         walking,
         sprinting,
         wallrunning,
@@ -81,6 +84,12 @@ public class PlayerMovement : MonoBehaviour
     public bool crouching;
     public bool wallRunning;
     public bool climbing;
+    public bool vaulting;
+
+    public bool freeze;
+    public bool unlimited;
+
+    public bool restricted;
 
     private void Awake()
     {
@@ -143,12 +152,24 @@ public class PlayerMovement : MonoBehaviour
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
     }
-
+    bool keepMomentum;
     private void StateHandler()
     {
-
+        // mode - freeze
+        if (freeze)
+        {
+            state = MovementState.freeze;
+            rb.velocity = Vector3.zero;
+            desiredMoveSpeed = 0f;
+        }
+        // mode - unlimited
+        else if (unlimited)
+        {
+            state = MovementState.unlimited;
+            desiredMoveSpeed = 999f;
+        }
         // Mode - Climbing
-        if (climbing)
+        else if (climbing)
         {
             state = MovementState.climbing;
             desiredMoveSpeed = climbingSpeed;
@@ -166,6 +187,7 @@ public class PlayerMovement : MonoBehaviour
             if (OnSlope() && rb.velocity.y < .1f)
             {
                 desiredMoveSpeed = slideSpeed;
+                keepMomentum = true;
             }
             else
             {
@@ -203,18 +225,35 @@ public class PlayerMovement : MonoBehaviour
 
         text_mode.SetText(state.ToString());
 
-        // 이전 movement 상태에서 자연스럽게 전환하기 위함
-        if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 4f && moveSpeed != 0)
-        {
-            StopAllCoroutines();
-            StartCoroutine(SmoothlyLerpMoveSpeed());
-        }
-        else
-        {
-            moveSpeed = desiredMoveSpeed;
-        }
+        bool desiredMoveSpeedhasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
 
+        // 이전 movement 상태에서 자연스럽게 전환하기 위함
+        if (desiredMoveSpeedhasChanged)
+        {
+            if (keepMomentum)
+            {
+                StopAllCoroutines();
+                StartCoroutine(SmoothlyLerpMoveSpeed());
+            }
+            else
+            {
+                moveSpeed = desiredMoveSpeed;
+            }
+        }
         lastDesiredMoveSpeed = desiredMoveSpeed;
+
+        // deactivate keepMomentum
+        if (Mathf.Abs(desiredMoveSpeed - moveSpeed) < 0.1f) keepMomentum = false;
+
+        // if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 4f && moveSpeed != 0)
+        // {
+        //     StopAllCoroutines();
+        //     StartCoroutine(SmoothlyLerpMoveSpeed());
+        // }
+        // else
+        // {
+        //     moveSpeed = desiredMoveSpeed;
+        // }
     }
     private IEnumerator SmoothlyLerpMoveSpeed()
     {
@@ -242,6 +281,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void MovePlayer()
     {
+        if (restricted) return;
         if (climbingScript.exitingWall) return;
 
         // calculate movement direction
